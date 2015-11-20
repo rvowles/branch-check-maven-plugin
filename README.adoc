@@ -1,0 +1,46 @@
+= Fail on Changes Plugin
+
+This plugin allows your build to fail if it is trying to package without tracking changes to another branch. It
+is particularly useful if you have another master branch happening and you don't want unexpected reversions happening,
+particularly on the build server.
+
+It uses JGit to load the repository, and specifies one other branch to track. It will fail if changes are
+detected and put them into the log.
+
+----
+<profiles>
+		<profile>
+			<id>change-track</id>
+
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>failOnMissedMerge</name>
+					<value>true</value>
+				</property>
+			</activation>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.bluetrainsoftware.maven</groupId>
+						<artifactId>branch-change-maven-plugin</artifactId>
+						<version>1.1-SNAPSHOT</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>change-track</goal>
+								</goals>
+								<!-- sooner is better -->
+								<phase>generate-resources</phase>
+								<configuration>
+									<trackedBranch>executable-refactor</trackedBranch>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+----

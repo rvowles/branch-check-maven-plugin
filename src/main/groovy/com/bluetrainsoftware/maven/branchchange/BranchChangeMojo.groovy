@@ -32,7 +32,7 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser
 	name = 'change-track',
 	requiresProject = true,
 	requiresDependencyResolution = ResolutionScope.NONE,
-	defaultPhase = LifecyclePhase.INITIALIZE
+	defaultPhase = LifecyclePhase.PREPARE_PACKAGE
 )
 class BranchChangeMojo extends AbstractMojo {
 	@Parameter(property = "trackedBranch")

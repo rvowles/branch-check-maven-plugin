@@ -34,7 +34,7 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser
 	requiresDependencyResolution = ResolutionScope.NONE,
 	defaultPhase = LifecyclePhase.PREPARE_PACKAGE
 )
-class BranchChangeMojo extends AbstractMojo {
+class BranchCheckMojo extends AbstractMojo {
 	@Parameter(property = "trackedBranch")
 	String trackedBranch
 

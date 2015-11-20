@@ -24,7 +24,7 @@ detected and put them into the log.
 				<plugins>
 					<plugin>
 						<groupId>com.bluetrainsoftware.maven</groupId>
-						<artifactId>branch-change-maven-plugin</artifactId>
+						<artifactId>branch-check-maven-plugin</artifactId>
 						<version>1.1-SNAPSHOT</version>
 						<executions>
 							<execution>

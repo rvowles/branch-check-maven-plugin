@@ -9,7 +9,7 @@
 
 	<groupId>com.bluetrainsoftware.maven</groupId>
 	<artifactId>branch-check-maven-plugin</artifactId>
-	<version>1.2-SNAPSHOT</version>
+	<version>1.2</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>Maven plugin for branch checks</name>
@@ -23,7 +23,7 @@
 		<connection>scm:git:git@github.com:rvowles/${project.artifactId}</connection>
 		<developerConnection>scm:git:git@github.com:rvowles/${project.artifactId}</developerConnection>
 		<url>http://github.com/rvowles/${project.artifactId}</url>
-		<tag>HEAD</tag>
+		<tag>branch-check-maven-plugin-1.2</tag>
 	</scm>
 
 	<properties>

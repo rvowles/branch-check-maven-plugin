@@ -34,7 +34,8 @@ detected and put them into the log.
 								<!-- sooner is better -->
 								<phase>generate-resources</phase>
 								<configuration>
-									<trackedBranch>executable-refactor</trackedBranch>
+									<trackedBranch>refs/heads/executable-refactor</trackedBranch>
+                  <fetchOrigin>origin</fetchOrigin> <!-- only use if you want to fetch as part of the process -->
 								</configuration>
 							</execution>
 						</executions>

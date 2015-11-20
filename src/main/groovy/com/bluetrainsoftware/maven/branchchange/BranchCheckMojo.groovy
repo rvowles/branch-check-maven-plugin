@@ -20,6 +20,7 @@ import org.eclipse.jgit.lib.RepositoryBuilder
 import org.eclipse.jgit.revwalk.RevCommit
 import org.eclipse.jgit.revwalk.RevTree
 import org.eclipse.jgit.revwalk.RevWalk
+import org.eclipse.jgit.transport.RefSpec
 import org.eclipse.jgit.treewalk.AbstractTreeIterator
 import org.eclipse.jgit.treewalk.CanonicalTreeParser
 
@@ -37,6 +38,8 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser
 class BranchCheckMojo extends AbstractMojo {
 	@Parameter(property = "trackedBranch")
 	String trackedBranch
+	@Parameter(property = "fetchOrigin")
+	String fetchOrigin = null
 
 	@Override
 	void execute() throws MojoExecutionException, MojoFailureException {
@@ -58,6 +61,11 @@ class BranchCheckMojo extends AbstractMojo {
 		Ref ref = repository.getRef(trackedBranch)
 
 		if (ref) {
+			if (fetchOrigin) {
+				getLog().info("Fetch requested, fetching ${fetchOrigin}:${trackedBranch}")
+				git.fetch().setRemote(fetchOrigin).setRefSpecs(new RefSpec(trackedBranch)).call();
+			}
+
 			int count = 0
 
 			for(RevCommit log : git.log().add(ref.objectId).call()) {

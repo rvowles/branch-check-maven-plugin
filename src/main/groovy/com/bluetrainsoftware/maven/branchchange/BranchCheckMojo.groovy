@@ -20,6 +20,7 @@ import org.eclipse.jgit.lib.RepositoryBuilder
 import org.eclipse.jgit.revwalk.RevCommit
 import org.eclipse.jgit.revwalk.RevTree
 import org.eclipse.jgit.revwalk.RevWalk
+import org.eclipse.jgit.transport.FetchResult
 import org.eclipse.jgit.transport.RefSpec
 import org.eclipse.jgit.treewalk.AbstractTreeIterator
 import org.eclipse.jgit.treewalk.CanonicalTreeParser
@@ -51,6 +52,9 @@ class BranchCheckMojo extends AbstractMojo {
 		Repository repository = buildRepository()
 
 		Git git = new Git(repository)
+
+		getLog().info("Attempting to compare current branch ${repository.branch}" )
+
 		Iterable<RevCommit> logs = git.log().call()
 		Map<ObjectId, RevCommit> currentBranchCommits = new HashMap<>()
 
@@ -58,14 +62,24 @@ class BranchCheckMojo extends AbstractMojo {
 			currentBranchCommits[log.id] = log
 		}
 
-		Ref ref = repository.getRef(trackedBranch)
+		getLog().info("Found ${currentBranchCommits.size()} commits on branch ${repository.branch}")
+
+		Ref checkRef = null
+
+		if (fetchOrigin) {
+			getLog().info("Fetch requested, fetching ${fetchOrigin}:${trackedBranch}")
+			FetchResult result = git.fetch().setRemote(fetchOrigin).setRefSpecs(new RefSpec(trackedBranch)).call();
+			result.advertisedRefs.each { Ref ref ->
+				if (ref.name == trackedBranch) {
+					checkRef = ref
+				}
+			}
+		}
+
+		Ref ref = checkRef ?: repository.getRef(trackedBranch)
 
 		if (ref) {
-			if (fetchOrigin) {
-				getLog().info("Fetch requested, fetching ${fetchOrigin}:${trackedBranch}")
-				git.fetch().setRemote(fetchOrigin).setRefSpecs(new RefSpec(trackedBranch)).call();
-			}
-
+			getLog().info("Comparing commits on ${trackedBranch} against ${repository.branch}")
 			int count = 0
 
 			for(RevCommit log : git.log().add(ref.objectId).call()) {
@@ -78,6 +92,8 @@ class BranchCheckMojo extends AbstractMojo {
 			if (count > 0) {
 				throw new MojoExecutionException("Tracked branch has unmerged changes.")
 			}
+		} else {
+			getLog().error("Unable to get ref ${trackedBranch}")
 		}
 	}
 
